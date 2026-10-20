@@ -88,6 +88,26 @@ async function handle(request: Request) {
     return json({ error: "Ошибка сервера" }, 500);
   }
 }
-export const GET = handle;
-export const POST = handle;
-export const PATCH = handle;
+const githubPagesOrigin = "https://artemev009.github.io";
+async function withCors(request: Request) {
+  const allowed = request.headers.get("origin") === githubPagesOrigin;
+  if (request.method === "OPTIONS") {
+    if (!allowed) return new Response(null, { status: 403 });
+    return new Response(null, { status: 204, headers: {
+      "Access-Control-Allow-Origin": githubPagesOrigin,
+      "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Bank-Pin",
+      "Vary": "Origin",
+    } });
+  }
+  const response = await handle(request);
+  if (!allowed) return response;
+  const result = new Response(response.body, response);
+  result.headers.set("Access-Control-Allow-Origin", githubPagesOrigin);
+  result.headers.set("Vary", "Origin");
+  return result;
+}
+export const GET = withCors;
+export const POST = withCors;
+export const PATCH = withCors;
+export const OPTIONS = withCors;

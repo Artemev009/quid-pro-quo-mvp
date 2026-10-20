@@ -10,10 +10,11 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const state = { goal: 'equipment', amount: 1500000, term: 12, mode: 'client', selected: null, filter: 'all', applications: [] };
 const saved = () => { try { return JSON.parse(localStorage.getItem('qpq-current-application') || 'null'); } catch { return null; } };
 const bankPin = () => sessionStorage.getItem('qpq-bank-pin') || '';
+const apiOrigin = location.hostname === 'artemev009.github.io' ? 'https://quid-pro-quo-bank-demo.perospilsa.chatgpt.site' : '';
 
 async function api(url, options = {}, bank = false) {
   let response;
-  try { response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...(bank ? { 'X-Bank-Pin': bankPin() } : {}), ...(options.headers || {}) } }); }
+  try { response = await fetch(apiOrigin + url, { ...options, headers: { 'Content-Type': 'application/json', ...(bank ? { 'X-Bank-Pin': bankPin() } : {}), ...(options.headers || {}) } }); }
   catch { throw new Error('Нет связи с сервером. Запустите приложение через сервер из README.'); }
   let result;
   try { result = await response.json(); } catch { throw new Error('Сервер заявок недоступен на этом адресе.'); }
