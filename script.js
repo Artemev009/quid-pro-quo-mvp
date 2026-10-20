@@ -12,7 +12,7 @@ const save = value => localStorage.setItem('quid-pro-quo-application', JSON.stri
 function show(id) {
   if (id === 'status') renderStatus();
   document.querySelectorAll('.screen').forEach(el => el.classList.toggle('active', el.id === id));
-  history.replaceState(null, '', '#' + id);
+  history.replaceState(null, '', location.pathname + location.search);
   requestAnimationFrame(() => window.scrollTo(0, 0));
 }
 function renderOffers() {
