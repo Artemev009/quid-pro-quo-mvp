@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f5">
+  <title>Пульс Бизнеса — финансирование под вашу задачу</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="header wrap">
+    <button class="brand plain" data-go="home" aria-label="На главную"><span class="brand-mark"><i></i><i></i><i></i></span><span>Пульс <b>Бизнеса</b></span></button>
+    <nav aria-label="Навигация"><button class="nav-link" data-go="home">Главная</button><button class="nav-link" data-go="offers">Продукты</button><button class="nav-link" data-go="status">Моя заявка</button></nav>
+    <span class="demo-pill">Демо чемпионата</span>
+  </header>
+
+  <main>
+    <section class="screen active" id="home" aria-labelledby="hero-title">
+      <div class="wrap hero">
+        <div class="hero-copy"><span class="eyebrow"><span class="line"></span> Финансирование для бизнеса</span><h1 id="hero-title">Деньги для<br>следующего <em>шага</em></h1><p>Расскажите о задаче бизнеса. Мы покажем подходящие варианты и проведём вас от заявки до решения.</p><button class="btn primary" data-go="offers">Подобрать кредит <span aria-hidden="true">↗</span></button><div class="hero-meta"><span>01&nbsp; Выберите задачу</span><span>02&nbsp; Узнайте условия</span><span>03&nbsp; Подайте заявку</span></div></div>
+        <div class="hero-art" aria-hidden="true"><div class="art-orbit"></div><div class="art-card art-back"><span>01 / РОСТ</span><strong>+24%</strong><div class="art-bars"><i></i><i></i><i></i><i></i></div></div><div class="art-card art-front"><span>ВАША ЦЕЛЬ</span><strong>Воплотить<br>планы в жизнь</strong><div class="art-arrow">↗</div></div><div class="art-disc"></div></div>
+      </div>
+      <div class="wrap goals"><div class="section-top"><span class="eyebrow">Начните с главного</span><h2>Какая задача у вашего бизнеса?</h2></div><div class="goal-grid"><button class="goal-card" data-goal="turnover"><span class="goal-icon">↗</span><strong>Пополнить оборот</strong><span>Закупки, склад, текущие расходы</span><span class="goal-arrow">→</span></button><button class="goal-card" data-goal="equipment"><span class="goal-icon">◈</span><strong>Купить оборудование</strong><span>Новая техника и модернизация</span><span class="goal-arrow">→</span></button><button class="goal-card" data-goal="growth"><span class="goal-icon">▥</span><strong>Развивать бизнес</strong><span>Новая точка или направление</span><span class="goal-arrow">→</span></button></div></div>
+    </section>
+
+    <section class="screen" id="offers" aria-labelledby="offers-title">
+      <div class="wrap inner"><div class="step-line"><span class="on">1&nbsp; Задача</span><i></i><span>2&nbsp; Условия</span><i></i><span>3&nbsp; Заявка</span></div><button class="back" data-go="home">← На главную</button><span class="eyebrow">Шаг 1 из 3</span><h1 id="offers-title">Подберём решение<br>под вашу задачу</h1><p class="lead">Выберите цель, сумму и срок. Справа увидите предварительные варианты.</p><div class="two-col"><div class="panel"><label class="field-title">Для чего нужны деньги?</label><div class="choice-grid" id="goal-choices"></div><div class="field-group"><label for="amount">Какая сумма нужна? <output id="amount-output"></output></label><input id="amount" type="range" min="100000" max="10000000" step="100000" value="1500000"><div class="range-ends"><span>100 тыс. ₽</span><span>10 млн ₽</span></div></div><div class="field-group"><span class="field-title">На какой срок?</span><div class="term-row" id="term-choices"></div></div></div><div class="panel recommend"><span class="tag">Подбор по вашей задаче</span><h2 id="offer-title"></h2><p id="offer-description"></p><div class="offer-metrics"><div><span>Сумма</span><strong id="offer-amount"></strong></div><div><span>Срок</span><strong id="offer-term"></strong></div><div><span>Ориентир по ставке</span><strong id="offer-rate"></strong></div></div><p class="disclaimer">Учебные условия для демонстрации. Это не предложение банка и не реальное кредитное решение.</p><button class="btn primary wide" data-go="application">Продолжить заявку <span>→</span></button></div></div></div>
+    </section>
+
+    <section class="screen" id="application" aria-labelledby="application-title">
+      <div class="wrap inner narrow"><div class="step-line"><span class="done">1&nbsp; Задача</span><i></i><span class="on">2&nbsp; Условия</span><i></i><span>3&nbsp; Заявка</span></div><button class="back" data-go="offers">← Назад к условиям</button><span class="eyebrow">Шаг 2 из 3</span><h1 id="application-title">Расскажите о бизнесе</h1><p class="lead">Для демонстрации достаточно этих данных. Заявка останется в этом браузере.</p><form id="application-form" class="panel form"><div class="form-grid"><label>Название компании<input name="company" required maxlength="80" placeholder="Например, Кофейня Север"></label><label>ИНН компании<input name="inn" required inputmode="numeric" pattern="[0-9]{10}|[0-9]{12}" title="Введите 10 или 12 цифр" placeholder="10 или 12 цифр"></label><label>Ваше имя<input name="person" required maxlength="60" placeholder="Как к вам обращаться"></label><label>Месячная выручка, ₽<input name="revenue" required type="number" min="0" step="1000" placeholder="Например, 800000"></label></div><label class="full-label">Коротко о цели финансирования<textarea name="purpose" required maxlength="300" rows="3" placeholder="Что вы планируете сделать на эти деньги?"></textarea></label><div class="form-bottom"><p>Вы отправляете учебную заявку. Здесь используются только введённые вами данные.</p><button class="btn primary" type="submit">Отправить заявку <span>→</span></button></div></form></div>
+    </section>
+
+    <section class="screen" id="status" aria-labelledby="status-title"><div class="wrap inner narrow"><div class="step-line"><span class="done">1&nbsp; Задача</span><i></i><span class="done">2&nbsp; Условия</span><i></i><span class="on">3&nbsp; Заявка</span></div><span class="eyebrow">Моя заявка</span><h1 id="status-title">Заявка и решение</h1><div id="status-content"></div></div></section>
+  </main>
+  <footer class="footer wrap"><span>Пульс Бизнеса · прототип для чемпионата</span><span>Все данные и условия демонстрационные</span></footer>
+</body>
+</html>
