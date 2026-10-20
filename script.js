@@ -6,14 +6,14 @@ const goals = {
 const terms = [6, 12, 24, 36];
 const money = n => new Intl.NumberFormat('ru-RU').format(n) + ' ₽';
 const state = { goal: 'equipment', amount: 1500000, term: 12 };
-const saved = () => { try { return JSON.parse(localStorage.getItem('pulse-application') || 'null'); } catch { return null; } };
-const save = value => localStorage.setItem('pulse-application', JSON.stringify(value));
+const saved = () => { try { return JSON.parse(localStorage.getItem('quid-pro-quo-application') || 'null'); } catch { return null; } };
+const save = value => localStorage.setItem('quid-pro-quo-application', JSON.stringify(value));
 
 function show(id) {
   if (id === 'status') renderStatus();
   document.querySelectorAll('.screen').forEach(el => el.classList.toggle('active', el.id === id));
-  window.scrollTo({ top: 0, behavior: 'instant' });
   history.replaceState(null, '', '#' + id);
+  requestAnimationFrame(() => window.scrollTo(0, 0));
 }
 function renderOffers() {
   const choices = document.getElementById('goal-choices');
@@ -43,7 +43,7 @@ document.addEventListener('click', e => {
   const quick = e.target.closest('[data-goal]'); if (quick) { state.goal = quick.dataset.goal; renderOffers(); show('offers'); return; }
   const choice = e.target.closest('[data-select-goal]'); if (choice) { state.goal = choice.dataset.selectGoal; renderOffers(); return; }
   const term = e.target.closest('[data-term]'); if (term) { state.term = Number(term.dataset.term); renderOffers(); return; }
-  if (e.target.id === 'reset-application') { localStorage.removeItem('pulse-application'); document.getElementById('application-form').reset(); show('offers'); }
+  if (e.target.id === 'reset-application') { localStorage.removeItem('quid-pro-quo-application'); document.getElementById('application-form').reset(); show('offers'); }
 });
 document.getElementById('amount').addEventListener('input', e => { state.amount = Number(e.target.value); renderOffers(); });
 document.getElementById('application-form').addEventListener('submit', e => {
