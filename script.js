@@ -55,7 +55,7 @@ async function renderStatus() {
 }
 async function renderBank() {
   const host = document.getElementById('bank-content');
-  if (!bankPin()) { host.innerHTML = '<form id="bank-login" class="panel form login-panel"><h2>Вход в демо-кабинет</h2><p>Код демонстрации указан в README проекта.</p><label>Код сотрудника<input name="pin" type="password" required autocomplete="off" placeholder="Введите демо-код"></label><button class="btn primary" type="submit">Открыть заявки →</button><p class="form-error" role="alert"></p></form>'; return; }
+  if (!bankPin()) { host.innerHTML = '<form id="bank-login" class="panel form login-panel"><h2>Вход в демо-кабинет</h2><p>Введите демо-код сотрудника, полученный от владельца проекта.</p><label>Код сотрудника<input name="pin" type="password" required autocomplete="off" placeholder="Введите демо-код"></label><button class="btn primary" type="submit">Открыть заявки →</button><p class="form-error" role="alert"></p></form>'; return; }
   host.innerHTML = '<div class="status-card">Загружаем очередь заявок…</div>';
   try { const data = await api('/api/bank/applications', {}, true); state.applications = data.applications; drawBank(); }
   catch (error) { if (error.message.includes('код')) sessionStorage.removeItem('qpq-bank-pin'); host.innerHTML = `<div class="status-card"><h2>Не удалось открыть кабинет</h2><p>${esc(error.message)}</p><button class="btn secondary" id="retry-bank">Повторить</button></div>`; }
