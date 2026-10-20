@@ -2,4 +2,10 @@ services:
   web:
     build: .
     ports:
-      - "8080:80"
+      - "8080:8080"
+    environment:
+      BANK_DEMO_PIN: ${BANK_DEMO_PIN:-bank-demo-2026}
+    volumes:
+      - applications:/app/data
+volumes:
+  applications:
