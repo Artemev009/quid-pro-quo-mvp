@@ -19,13 +19,15 @@ test('client application and bank decision are shared via server', async t => {
     const response = await fetch(base + route, { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
     return { code: response.status, data: await response.json() };
   };
-  const submitted = await call('/api/applications', { method: 'POST', body: JSON.stringify({ company: 'Демо Кофе', inn: '1234567890', person: 'Анна', revenue: 800000, purpose: 'Новая кофемашина', amount: 1500000, term: 12, goal: 'equipment' }) });
+  const submitted = await call('/api/applications', { method: 'POST', body: JSON.stringify({ company: 'Демо Кофе', inn: '1234567890', person: 'Анна', revenue: 800000, freeCash: 120000, collateral: 'no', purpose: 'Новая кофемашина', amount: 1500000, term: 12, goal: 'equipment' }) });
   assert.equal(submitted.code, 201);
   const { id, token } = submitted.data;
   assert.equal((await call('/api/bank/applications')).code, 401);
   const bankHeaders = { 'X-Bank-Pin': 'test-bank-pin' };
   const queue = await call('/api/bank/applications', { headers: bankHeaders });
   assert.equal(queue.data.applications[0].company, 'Демо Кофе');
+  assert.equal(queue.data.applications[0].freeCash, 120000);
+  assert.equal(queue.data.applications[0].collateral, 'no');
   assert.equal(queue.data.applications[0].token, undefined);
   const clientHeaders = { Authorization: `Bearer ${token}` };
   assert.equal((await call(`/api/applications/${id}`)).code, 403);
@@ -39,4 +41,5 @@ test('client application and bank decision are shared via server', async t => {
   assert.equal(client.data.status, 'offered');
   assert.equal(client.data.history.length, 4);
   assert.equal(client.data.token, undefined);
+  assert.equal(client.data.freeCash, 120000);
 });

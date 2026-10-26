@@ -60,10 +60,10 @@ async function handler(req, res) {
     if (pathname === '/api/applications' && req.method === 'POST') {
       const input = await body(req);
       const company = text(input.company, 80), person = text(input.person, 60), purpose = text(input.purpose, 300), inn = text(input.inn, 12);
-      const revenue = Number(input.revenue), amount = Number(input.amount), term = Number(input.term);
-      if (!company || !person || !purpose || !/^(\d{10}|\d{12})$/.test(inn) || !Number.isFinite(revenue) || revenue < 0 || !Number.isInteger(amount) || amount < 100000 || amount > 10000000 || ![6, 12, 24, 36].includes(term) || !['turnover', 'equipment', 'growth'].includes(input.goal)) return json(res, 400, { error: 'Проверьте данные заявки' });
+      const revenue = Number(input.revenue), freeCash = Number(input.freeCash), amount = Number(input.amount), term = Number(input.term), collateral = input.collateral;
+      if (!company || !person || !purpose || !/^(\d{10}|\d{12})$/.test(inn) || !Number.isFinite(revenue) || revenue < 0 || !Number.isFinite(freeCash) || freeCash < 0 || freeCash > revenue || !['yes', 'no', 'unsure'].includes(collateral) || !Number.isInteger(amount) || amount < 100000 || amount > 10000000 || ![6, 12, 24, 36].includes(term) || !['turnover', 'equipment', 'growth'].includes(input.goal)) return json(res, 400, { error: 'Проверьте данные заявки: свободные средства не могут превышать выручку' });
       const now = new Date().toISOString();
-      const item = { id: crypto.randomUUID(), token: crypto.randomBytes(24).toString('hex'), company, inn, person, revenue, purpose, amount, term, goal: input.goal, status: 'submitted', note: '', offer: null, createdAt: now, updatedAt: now, history: [{ at: now, actor: 'client', event: 'Заявка отправлена' }] };
+      const item = { id: crypto.randomUUID(), token: crypto.randomBytes(24).toString('hex'), company, inn, person, revenue, freeCash, collateral, purpose, amount, term, goal: input.goal, status: 'submitted', note: '', offer: null, createdAt: now, updatedAt: now, history: [{ at: now, actor: 'client', event: 'Заявка отправлена' }] };
       const all = readAll(); all.unshift(item); writeAll(all);
       return json(res, 201, { id: item.id, token: item.token, application: clientView(item) });
     }

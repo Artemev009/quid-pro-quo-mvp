@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 
 type Application = {
-  id: string; token: string; company: string; inn: string; person: string; revenue: number;
+  id: string; token: string; company: string; inn: string; person: string; revenue: number; freeCash?: number; collateral?: string;
   purpose: string; amount: number; term: number; goal: string; status: string; note: string;
   offer: null | { amount: number; term: number; rate: number };
   createdAt: string; updatedAt: string;
@@ -34,11 +34,11 @@ async function handle(request: Request) {
     if (pathname === "/api/applications" && method === "POST") {
       const data = await input(request);
       const company = clean(data.company, 80), inn = clean(data.inn, 12), person = clean(data.person, 60), purpose = clean(data.purpose, 300);
-      const revenue = Number(data.revenue), amount = Number(data.amount), term = Number(data.term);
-      if (!company || !person || !purpose || !/^(\d{10}|\d{12})$/.test(inn) || !Number.isFinite(revenue) || revenue < 0 || !Number.isInteger(amount) || amount < 100000 || amount > 10000000 || ![6, 12, 24, 36].includes(term) || !["turnover", "equipment", "growth"].includes(String(data.goal))) return json({ error: "Проверьте данные заявки" }, 400);
+      const revenue = Number(data.revenue), freeCash = Number(data.freeCash), amount = Number(data.amount), term = Number(data.term), collateral = String(data.collateral);
+      if (!company || !person || !purpose || !/^(\d{10}|\d{12})$/.test(inn) || !Number.isFinite(revenue) || revenue < 0 || !Number.isFinite(freeCash) || freeCash < 0 || freeCash > revenue || !["yes", "no", "unsure"].includes(collateral) || !Number.isInteger(amount) || amount < 100000 || amount > 10000000 || ![6, 12, 24, 36].includes(term) || !["turnover", "equipment", "growth"].includes(String(data.goal))) return json({ error: "Проверьте данные заявки: свободные средства не могут превышать выручку" }, 400);
       const now = new Date().toISOString();
       const token = Array.from(crypto.getRandomValues(new Uint8Array(24)), byte => byte.toString(16).padStart(2, "0")).join("");
-      const item: Application = { id: crypto.randomUUID(), token, company, inn, person, revenue, purpose, amount, term, goal: String(data.goal), status: "submitted", note: "", offer: null, createdAt: now, updatedAt: now, history: [{ at: now, actor: "client", event: "Заявка отправлена" }] };
+      const item: Application = { id: crypto.randomUUID(), token, company, inn, person, revenue, freeCash, collateral, purpose, amount, term, goal: String(data.goal), status: "submitted", note: "", offer: null, createdAt: now, updatedAt: now, history: [{ at: now, actor: "client", event: "Заявка отправлена" }] };
       await db().prepare("INSERT INTO applications (id, token, payload, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
         .bind(item.id, token, JSON.stringify(item), item.status, now, now).run();
       return json({ id: item.id, token, application: visible(item) }, 201);
